@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
     // Method to convert User entity to UserDTO
     private UserDTO convertToDTO(User user) {
         return new UserDTO(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 null,  // Don't need to return confirmPassword in the DTO

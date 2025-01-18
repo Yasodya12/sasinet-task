@@ -8,6 +8,7 @@ import lombok.Data;
 
 
 public class UserDTO {
+    Long id;
     @NotBlank(message = "Username is required")
     private String username;
 
@@ -25,7 +26,8 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String username, String password, String confirmPassword, String email) {
+    public UserDTO(Long id, String username, String password, String confirmPassword, String email) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.confirmPassword = confirmPassword;
@@ -62,5 +64,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

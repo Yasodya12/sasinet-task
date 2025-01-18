@@ -1,9 +1,11 @@
 package com.sasinet.sasinetTask.controller;
 
+import com.sasinet.sasinetTask.DTO.LogInDTO;
 import com.sasinet.sasinetTask.DTO.UserDTO;
 import com.sasinet.sasinetTask.entity.User;
 import com.sasinet.sasinetTask.service.UserService;
 import com.sasinet.sasinetTask.util.ErrorResponse;
+import com.sasinet.sasinetTask.util.LoginRes;
 import com.sasinet.sasinetTask.util.RegistrationSuccessResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
+        System.out.println("inside resgister controller");
         try {
             // Register the user
             UserDTO registeredUser = userService.registerUser(userDTO);
@@ -50,10 +53,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LogInDTO userDTO) {
+
+        System.out.println("inside controller"+userDTO);
+        UserDTO userDTO2 = new UserDTO();
+        userDTO2.setUsername(userDTO.getUsername());
+        userDTO2.setPassword(userDTO.getPassword());
         try {
-            UserDTO userDTO1 = userService.authenticateUser(userDTO);
-            return ResponseEntity.ok("Login successful! Username: " + userDTO1.getUsername());
+            UserDTO userDTO1 = userService.authenticateUser(userDTO2);
+            return ResponseEntity.ok(new LoginRes(userDTO1.getEmail(),userDTO1.getId()));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }

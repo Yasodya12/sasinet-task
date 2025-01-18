@@ -1,31 +1,26 @@
-package com.sasinet.sasinetTask.entity;
+package com.sasinet.sasinetTask.DTO;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import com.sasinet.sasinetTask.entity.Account;
 
 import java.time.LocalDateTime;
 
-@Entity
+public class FixedDepositeDTO {
 
-public class FixedDeposit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+
     private Account account;
 
     private double depositAmount;
     private double interestRate;
-
     private double total;
     private LocalDateTime startDate;
     private LocalDateTime maturityDate;
 
-    public FixedDeposit() {
+    public FixedDepositeDTO() {
     }
 
-    public FixedDeposit(Long id, Account account, double depositAmount, double interestRate, double total, LocalDateTime startDate, LocalDateTime maturityDate) {
+    public FixedDepositeDTO(Long id, Account account, double depositAmount, double interestRate, double total, LocalDateTime startDate, LocalDateTime maturityDate) {
         this.id = id;
         this.account = account;
         this.depositAmount = depositAmount;
@@ -93,7 +88,7 @@ public class FixedDeposit {
 
     @Override
     public String toString() {
-        return "FixedDeposit{" +
+        return "FixedDepositeDTO{" +
                 "id=" + id +
                 ", account=" + account +
                 ", depositAmount=" + depositAmount +
@@ -104,4 +99,3 @@ public class FixedDeposit {
                 '}';
     }
 }
-

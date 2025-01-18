@@ -1,30 +1,18 @@
-package com.sasinet.sasinetTask.entity;
-
-import jakarta.persistence.*;
-import lombok.Data;
+package com.sasinet.sasinetTask.DTO;
 
 import java.time.LocalDateTime;
 
-@Entity
+public class TransactionDTO {
 
-public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    private Account account;
-
+    private Long accountId;
     private double amount;
     private String type; // "Deposit" or "Withdraw"
     private LocalDateTime date;
 
-    public Transaction() {
-    }
-
-    public Transaction(Long id, Account account, double amount, String type, LocalDateTime date) {
+    public TransactionDTO(Long id, Long accountId, double amount, String type, LocalDateTime date) {
         this.id = id;
-        this.account = account;
+        this.accountId = accountId;
         this.amount = amount;
         this.type = type;
         this.date = date;
@@ -38,12 +26,12 @@ public class Transaction {
         this.id = id;
     }
 
-    public Account getAccount() {
-        return account;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public double getAmount() {
@@ -70,4 +58,3 @@ public class Transaction {
         this.date = date;
     }
 }
-

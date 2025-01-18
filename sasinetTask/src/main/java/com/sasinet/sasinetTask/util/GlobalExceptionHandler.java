@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.naming.AuthenticationException;
 import java.util.HashMap;
@@ -30,6 +31,14 @@ public class GlobalExceptionHandler {
         Map<String, String> response = new HashMap<>();
         response.put("error", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);  // 401 Unauthorized
+    }
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
+        // Create ErrorResponse object and set the error message
+        ErrorResponse errorResponse = new ErrorResponse(ex.getReason());
+
+        // Return response entity with status and error message
+        return new ResponseEntity<>(errorResponse, ex.getStatusCode());
     }
 }
 

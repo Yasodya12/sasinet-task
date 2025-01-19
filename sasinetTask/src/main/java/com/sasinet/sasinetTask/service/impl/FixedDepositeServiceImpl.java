@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FixedDepositeServiceImpl implements FixedDepositeService {
@@ -49,6 +51,45 @@ public class FixedDepositeServiceImpl implements FixedDepositeService {
         responseDTO.setTotal(interestEarned+fixedDeposit.getDepositAmount());
 
         return responseDTO;
+    }
+
+    @Override
+    public List<FixedDepositeDTO> getFDListByUserID(Long userID) {
+        List<Account> accountByUserId = accountRepository.findAccountByUserId(userID);
+
+        // Filter for only "FIXEDDEPOSITE" type accounts
+        List<Account> fixedDepositAccounts = accountByUserId.stream()
+                .filter(account -> "FIXEDDEPOSITE".equalsIgnoreCase(account.getType()))
+                .collect(Collectors.toList());
+
+        if (fixedDepositAccounts.isEmpty()) {
+            throw new IllegalArgumentException("No Fixed Deposit accounts found for the user");
+        }
+
+        // Process each fixed deposit account and convert to DTO
+        List<FixedDepositeDTO> fixedDepositDetails = fixedDepositAccounts.stream()
+                .map(account -> {
+                    // Retrieve the fixed deposit for the account
+                    FixedDeposit fixedDeposit = fixedDepositeRepositry.findByAccount(account);
+
+                    // Calculate interest earned
+                    double interestEarned = (fixedDeposit.getDepositAmount() * fixedDeposit.getInterestRate() * getElapsedYears(fixedDeposit.getStartDate())) / 100;
+
+                    // Create the DTO
+                    FixedDepositeDTO responseDTO = new FixedDepositeDTO();
+                    responseDTO.setId(fixedDeposit.getId());
+                    responseDTO.setAccount(fixedDeposit.getAccount());
+                    responseDTO.setDepositAmount(fixedDeposit.getDepositAmount());
+                    responseDTO.setInterestRate(fixedDeposit.getInterestRate());
+                    responseDTO.setStartDate(fixedDeposit.getStartDate());
+                    responseDTO.setMaturityDate(fixedDeposit.getStartDate().plusYears(5)); // Assuming a 5-year maturity
+                    responseDTO.setTotal(interestEarned + fixedDeposit.getDepositAmount());
+
+                    return responseDTO;
+                })
+                .collect(Collectors.toList());
+
+        return fixedDepositDetails;
     }
 
     // Helper method to calculate the number of years elapsed since the start date

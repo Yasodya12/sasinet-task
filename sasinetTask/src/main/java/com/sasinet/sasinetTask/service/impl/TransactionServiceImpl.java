@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -153,6 +155,22 @@ public class TransactionServiceImpl implements TransactionService {
                 savedTransaction.getType(),
                 savedTransaction.getDate()
         );
+    }
+
+    @Override
+    public List<TransactionDTO> getTransactionListUser(Long userID) {
+        List<Transaction> transactions = transactionRepository.findByAccount_User_Id(userID);
+
+        // Convert each Transaction entity to a TransactionDTO and return the list of DTOs
+        return transactions.stream()
+                .map(transaction -> new TransactionDTO(
+                        transaction.getId(),
+                        transaction.getAccount().getId(),
+                        transaction.getAmount(),
+                        transaction.getType(),
+                        transaction.getDate()))
+                .collect(Collectors.toList());
+
     }
 
 

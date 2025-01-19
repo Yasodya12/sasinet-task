@@ -1,6 +1,7 @@
 package com.sasinet.sasinetTask.service.impl;
 
 import com.sasinet.sasinetTask.DTO.AccountDTO;
+import com.sasinet.sasinetTask.DTO.LoanDTO;
 import com.sasinet.sasinetTask.Repositry.*;
 import com.sasinet.sasinetTask.entity.*;
 import com.sasinet.sasinetTask.service.AccountService;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -133,6 +136,45 @@ public class AccountServiceImpl implements AccountService {
 
         return accountDTO;
     }
+
+    @Override
+    public List<AccountDTO> getUserAccounts(Long userID) {
+        List<Account> accountByUserId = accountRepository.findAccountByUserId(userID);
+        List<AccountDTO> accountDTOs = accountByUserId.stream().map(account -> {
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setId(account.getId()); // Set account ID
+            accountDTO.setType(account.getType()); // Set account type (e.g., SAVING, FIXEDDEPOSITE, LOAN)
+            accountDTO.setBalance(account.getBalance()); // Set account balance
+
+            return accountDTO;
+        }).collect(Collectors.toList());
+
+        return accountDTOs;
+
+    }
+
+    @Override
+    public List<LoanDTO> getLoanByUser(Long userID) {
+        List<Loan> loanList = loanRepositry.findByAccount_User_Id(userID);
+
+        // Convert Loan entities to LoanDTO
+        List<LoanDTO> loanDTOList = loanList.stream().map(loan -> {
+            // Extract data from the Loan and Account entities
+            Account account = loan.getAccount();  // Assuming you have a reference to the Account object in Loan
+
+            // Create and return the LoanDTO
+            return new LoanDTO(
+                    loan.getId(),
+                    account,  // Account object (or its relevant part, you can modify it if you need just certain fields)
+                    loan.getLoanAmount(),
+                    loan.getInterestRate(),
+                    loan.getRemainingAmount()
+            );
+        }).collect(Collectors.toList());
+
+        return loanDTOList;
+    }
+
 
     private double getElapsedYears(LocalDateTime startDate) {
         LocalDateTime now = LocalDateTime.now();

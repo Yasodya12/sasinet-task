@@ -33,13 +33,17 @@ public class AccountServiceImpl implements AccountService {
         this.savingRepositry = savingRepositry;
         this.fixedDepositeRepositry = fixedDepositeRepositry;
     }
-
+    // This is the funtion that create account account can be SAVING,LOAN,FIXEDDEPOSIT
     @Override
-    public AccountDTO createAccount(Long userId, AccountDTO accountDTO) throws Exception {
+    public AccountDTO createAccount(Long userId, AccountDTO accountDTO)  {
         // Check if user exists
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
-            throw new Exception("User not found");
+            try {
+                throw new Exception("User not found");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // Create the account
@@ -69,27 +73,27 @@ public class AccountServiceImpl implements AccountService {
             case "FIXEDDEPOSITE":
                 FixedDeposit fixedDeposit = new FixedDeposit();
 
-// Fetch account
+                // Fetch account
                 Account account3 = accountRepository.findById(account.getId())
                         .orElseThrow(() -> new IllegalArgumentException("Account not found with id: "));
 
-// Set account and balance for the fixed deposit
+                // Set account and balance for the fixed deposit
                 fixedDeposit.setAccount(account3);
                 fixedDeposit.setDepositAmount(accountDTO.getBalance());
                 fixedDeposit.setInterestRate(5);  // Assuming a fixed interest rate of 5%
 
-// Set start date (current date)
+                // Set start date (current date)
                 LocalDateTime startDate = LocalDateTime.now();
                 fixedDeposit.setStartDate(startDate);
 
-// Calculate interest earned based on deposit amount and interest rate
+                // Calculate interest earned based on deposit amount and interest rate
                 double interestEarned = (fixedDeposit.getDepositAmount() * fixedDeposit.getInterestRate() * getElapsedYears(startDate)) / 100;
 
-// Set the total amount (principal + interest earned)
+                // Set the total amount (principal + interest earned)
                 double totalAmount = fixedDeposit.getDepositAmount() + interestEarned;
                 fixedDeposit.setTotal(totalAmount);
 
-// Save the fixed deposit to the repository
+                // Save the fixed deposit to the repository
                 fixedDepositeRepositry.save(fixedDeposit);
                 break;
             case "LOAN":
@@ -113,7 +117,7 @@ public class AccountServiceImpl implements AccountService {
 
         return responseDTO;
     }
-
+    // This funtion can get account balance of saving account
     @Override
     public AccountDTO getAccountBalance(Long userId, Long accountId) {
         // Validate the user exists
@@ -136,7 +140,7 @@ public class AccountServiceImpl implements AccountService {
 
         return accountDTO;
     }
-
+    // This funtion can get All the accounts that user have
     @Override
     public List<AccountDTO> getUserAccounts(Long userID) {
         List<Account> accountByUserId = accountRepository.findAccountByUserId(userID);
@@ -153,6 +157,7 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    // This funtion can get All the loans that user have
     @Override
     public List<LoanDTO> getLoanByUser(Long userID) {
         List<Loan> loanList = loanRepositry.findByAccount_User_Id(userID);

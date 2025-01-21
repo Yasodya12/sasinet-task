@@ -7,5 +7,5 @@ import javax.naming.AuthenticationException;
 public interface UserService {
     UserDTO registerUser(UserDTO userDTO);
 
-    UserDTO authenticateUser(UserDTO userDTO) throws AuthenticationException;
+    UserDTO authenticateUser(UserDTO userDTO) ;
 }

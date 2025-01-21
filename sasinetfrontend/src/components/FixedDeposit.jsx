@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar.jsx";
+import {useSelector} from "react-redux";
 
 const FixedDepositsTable = () => {
     const [transactions, setTransactions] = useState([]);
-
+    const { id, email } = useSelector((state) => state.user);
     useEffect(() => {
         // Fetch data from the API
         axios
-            .get("http://localhost:8080/api/transactions/details?userId=1")
+            .get("http://localhost:8080/api/transactions/details?userId="+id)
             .then((response) => {
                 setTransactions(response.data);
             })

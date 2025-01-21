@@ -15,6 +15,8 @@ public class SavingAccoutServiceImpl implements SavingAccoutService {
 
     @Autowired
     SavingRepositry savingRepositry;
+
+    //    This funtion can get all the saving accounts of user by user ID
     @Override
     public List<SavingDTO> getSavingByUser(Long userID) {
         // Fetch the savings accounts by user ID
@@ -38,7 +40,7 @@ public class SavingAccoutServiceImpl implements SavingAccoutService {
         return savingDTOs;
 
     }
-
+    // Helper method to calculate the number of years elapsed since the start date
     @Override
     public List<Long> getSavingActIDByUser(Long id) {
        return savingRepositry.findAccountIdsByUserId(id);

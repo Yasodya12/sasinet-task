@@ -33,6 +33,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private  LoanRepositry loanRepositry;
+
+    // This is the funtion that deposit money to saving account
     @Override
     public TransactionDTO deposit(Long accountId, double amount) {
         // Fetch the account
@@ -76,7 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
                 savedTransaction.getDate()
         );
     }
-
+    // This is the funtion that withdraw money from saving account
     @Override
     public TransactionDTO withdraw(Long accountId, double amount) {
         Account account = accountRepository.findById(accountId)
@@ -107,7 +109,7 @@ public class TransactionServiceImpl implements TransactionService {
                 savedTransaction.getType(), savedTransaction.getDate());
     }
 
-
+    // This is the funtion that repay loan
     @Override
     public TransactionDTO repayLoan(Long accountId, double repaymentAmount) {
         // Fetch the account
@@ -156,7 +158,7 @@ public class TransactionServiceImpl implements TransactionService {
                 savedTransaction.getDate()
         );
     }
-
+    // This is the funtion that can get all the transactions done by user
     @Override
     public List<TransactionDTO> getTransactionListUser(Long userID) {
         List<Transaction> transactions = transactionRepository.findByAccount_User_Id(userID);

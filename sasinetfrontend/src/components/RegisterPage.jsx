@@ -28,20 +28,19 @@ const RegisterPage = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/users/register', {
+            const response = await fetch('http://localhost:8080/users/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Basic dXNlcjo2YmYxN2M4YS0zODZlLTRhYWItOGI0YS0zMzNkOWZhNjhmOGU=', // Add Authorization header
+                    'Content-Type': 'application/json', // Only Content-Type is set
                 },
-                body: JSON.stringify(requestBody),
+                body: JSON.stringify(requestBody), // Convert the request body to JSON
             });
 
             if (response.ok) {
                 const data = await response.json();
                 setSuccess('Registration successful! Redirecting to login...');
                 setTimeout(() => navigate('/'), 2000);
-            }  else {
+            } else {
                 // Parse the response JSON to extract error message
                 const errorData = await response.json();
                 if (errorData.errorMessage) {

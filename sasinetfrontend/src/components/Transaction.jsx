@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Navbar from "./Navbar"; // Importing the Navbar component
+import Navbar from "./Navbar";
+import {useSelector} from "react-redux"; // Importing the Navbar component
 
 const Transaction = () => {
     const [amount, setAmount] = useState("");
@@ -9,12 +10,12 @@ const Transaction = () => {
     const [accountIds, setAccountIds] = useState([]);
     const [selectedAccountId, setSelectedAccountId] = useState(null); // To store selected accountId
     const location = useLocation();
-
+    const { id, email } = useSelector((state) => state.user);
     useEffect(() => {
         // Fetch account IDs when the component mounts
         const fetchAccountIds = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/savingaccount/savings/accountIds?userId=1');
+                const response = await fetch('http://localhost:8080/api/savingaccount/savings/accountIds?userId='+id);
                 const data = await response.json();
                 setAccountIds(data); // Populate the account IDs in state
                 setSelectedAccountId(data[0]); // Set the first account ID as default

@@ -20,6 +20,7 @@ public class SavingAccountController {
         // Call the service method to fetch the savings and return the DTO list
         return savingService.getSavingByUser(userId);
     }
+    // End point to get all the account IDs of user
     @GetMapping("/savings/accountIds")
     public List<Long> getAccountIdsByUserId(@RequestParam Long userId) {
         return savingService.getSavingActIDByUser(userId);

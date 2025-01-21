@@ -22,47 +22,42 @@ public class TransactionController {
     @Autowired
     private FixedDepositeService fixedDepositeService;
 
+    // End point to deposit money
     @PostMapping("/deposit/{accountId}")
     public ResponseEntity<TransactionDTO> deposit(@PathVariable Long accountId, @RequestParam double amount) {
         System.out.println(accountId+" accout id is "+amount);
         TransactionDTO transactionDTO = transactionService.deposit(accountId, amount);
         return ResponseEntity.ok(transactionDTO);
     }
-
+    // End point to withdraw money
     @PostMapping("/withdraw/{accountId}")
     public ResponseEntity<TransactionDTO> withdraw(@PathVariable Long accountId, @RequestParam double amount) {
         TransactionDTO transactionDTO = transactionService.withdraw(accountId, amount);
         return ResponseEntity.ok(transactionDTO);
     }
-
+    //  End point to repay the loan
     @PostMapping("/loan/repay")
     public ResponseEntity<TransactionDTO> repayLoan(
             @RequestParam Long accountId,
             @RequestParam double repaymentAmount) {
-        System.out.println("inside pay loan");
+
         TransactionDTO transactionDTO = transactionService.repayLoan(accountId, repaymentAmount);
         return ResponseEntity.ok(transactionDTO);
     }
-
+    //  End point to get fixed deposit details
     @GetMapping("/fixed-deposit/details")
     public ResponseEntity<FixedDepositeDTO> getFixedDepositDetails(@RequestParam Long accountId) {
         FixedDepositeDTO fixedDepositDetails = fixedDepositeService.getFixedDepositDetails(accountId);
         return ResponseEntity.ok(fixedDepositDetails);
     }
-
+    //  End point to get all FD of user
     @GetMapping("/details")
     public ResponseEntity<List<FixedDepositeDTO>> getFixedDepositDetailsOfUSer(@RequestParam Long userId) {
         System.out.println("inside controller");
-        try {
+
             List<FixedDepositeDTO> fixedDepositDetails = fixedDepositeService.getFDListByUserID(userId);
             return ResponseEntity.ok(fixedDepositDetails);
-        } catch (IllegalArgumentException ex) {
-            // Handle cases where no fixed deposits are found
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (Exception ex) {
-            // Handle general errors
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+
     }
 
     @GetMapping("/trasaction/user")

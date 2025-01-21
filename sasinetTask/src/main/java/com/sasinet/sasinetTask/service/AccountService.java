@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface AccountService {
-    AccountDTO createAccount(Long userId, AccountDTO accountDTO) throws Exception;
+    AccountDTO createAccount(Long userId, AccountDTO accountDTO) ;
     AccountDTO getAccountBalance(Long userId, Long accountId);
 
     List<AccountDTO> getUserAccounts(Long userID);

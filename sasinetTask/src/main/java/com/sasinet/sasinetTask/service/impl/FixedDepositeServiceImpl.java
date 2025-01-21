@@ -23,6 +23,8 @@ public class FixedDepositeServiceImpl implements FixedDepositeService {
 
     @Autowired
     FixedDepositeRepositry fixedDepositeRepositry;
+
+    // This is the Funtion that get Fixed Deposit details by account ID
     @Override
     public FixedDepositeDTO getFixedDepositDetails(Long accountId) {
         // Fetch the account
@@ -52,7 +54,7 @@ public class FixedDepositeServiceImpl implements FixedDepositeService {
 
         return responseDTO;
     }
-
+    // This is the Funtion that get All the Fixed Deposit list of user
     @Override
     public List<FixedDepositeDTO> getFDListByUserID(Long userID) {
         List<Account> accountByUserId = accountRepository.findAccountByUserId(userID);

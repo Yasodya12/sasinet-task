@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Navbar from "./Navbar.jsx";
+import {useSelector} from "react-redux";
 
 const SavingAccount = () => {
     const [savingAccounts, setSavingAccounts] = useState([]);
     const location = useLocation();
-
+    const { id, email } = useSelector((state) => state.user);
     useEffect(() => {
         const fetchSavingAccounts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/savingaccount/byUser?userId=1');
+                const response = await fetch('http://localhost:8080/api/savingaccount/byUser?userId='+id);
                 const data = await response.json();
                 setSavingAccounts(data);
             } catch (error) {

@@ -2,6 +2,8 @@ package com.sasinet.sasinetTask.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
 
 public class AccountDTO {
 
@@ -14,6 +16,8 @@ public class AccountDTO {
     private double balance;
 
     // Getters and Setters
+
+
     public Long getId() {
         return id;
     }

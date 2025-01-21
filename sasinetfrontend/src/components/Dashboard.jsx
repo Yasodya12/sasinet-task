@@ -17,24 +17,10 @@ const Dashboard = () => {
     // Handle form submission
 
 
-    const { id, email } = useSelector((state) => state.user);
+    const { id, email,token } = useSelector((state) => state.user);
     const [accounts, setAccounts] = useState([]);
+    console.log(id,email,token)
 
-    // Fetch accounts on component mount
-    useEffect(() => {
-        const fetchAccounts = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/accounts/accountBySer/${id}`);
-                setAccounts(response.data);
-            } catch (error) {
-                console.error('Error fetching accounts:', error);
-            }
-        };
-
-        if (id) {
-            fetchAccounts();
-        }
-    }, [id]);
 
     const handleCreateAccount = async (e) => {
         e.preventDefault();
@@ -54,7 +40,8 @@ const Dashboard = () => {
         try {
             const response = await fetch(`http://localhost:8080/api/accounts/create/${id}`, {
                 method: 'POST',
-                headers: {
+                'headers': {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestData),
@@ -76,6 +63,36 @@ const Dashboard = () => {
             setMessageColor('text-red-600');
         }
     };
+
+
+
+    const api = axios.create({
+        baseURL: `http://localhost:8080`,
+        headers: {
+            'Authorization': `Bearer ${token}`, // Ensure the token is a valid string
+            "Content-Type": "application/json",
+        },
+    });
+
+    // Fetch accounts on component mount
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/accounts/accountBySer/${id}`);
+                setAccounts(response.data);
+            } catch (error) {
+                console.error('Error fetching accounts:', error);
+            }
+        };
+
+        if (id) {
+            fetchAccounts();
+        }
+    }, [id],handleCreateAccount);
+
+
+
+
 
     return (
         <div>

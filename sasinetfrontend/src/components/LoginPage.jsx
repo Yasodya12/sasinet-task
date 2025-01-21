@@ -16,15 +16,15 @@ export const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/users/login', {
+            const response = await axios.post('http://localhost:8080/users/login', {
                 username, // Send username as confirmPassword
                 password,
             });
 
             if (response.status === 200) {
                 // Assuming the login is successful, extract the user info from response
-                const { id, email } = response.data;  // Extract data from response
-                dispatch(setUser({ id, email }));
+                const { id, email,token } = response.data;  // Extract data from response
+                dispatch(setUser({ id, email,token }));
 
 
                 // Navigate to home or dashboard page

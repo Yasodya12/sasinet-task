@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar'; // Import Navbar component
+import Navbar from './Navbar';
+import {useSelector} from "react-redux"; // Import Navbar component
 
 const Loan = () => {
     const [accountId, setAccountId] = useState('');
@@ -8,11 +9,11 @@ const Loan = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [loans, setLoans] = useState([]); // To hold the fetched loan data
-
+    const { id, email } = useSelector((state) => state.user);
     // Fetch user loans from the API
     const fetchUserLoans = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/accounts/byUser/1');
+            const response = await fetch('http://localhost:8080/api/accounts/byUser/'+id);
             const data = await response.json();
             setLoans(data); // Set the fetched data to state
         } catch (error) {

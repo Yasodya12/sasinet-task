@@ -17,6 +17,7 @@ const Transaction = () => {
             try {
                 const response = await fetch('http://localhost:8080/api/savingaccount/savings/accountIds?userId='+id);
                 const data = await response.json();
+                console.log("this are trans ",data)
                 setAccountIds(data); // Populate the account IDs in state
                 setSelectedAccountId(data[0]); // Set the first account ID as default
             } catch (error) {

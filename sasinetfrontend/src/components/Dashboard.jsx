@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import AccountTable from "./AccountTable.jsx";
 import axios from "axios";  // Assuming you have a Navbar component
 
+
 const Dashboard = () => {
     // Access userId from the Redux store
 
@@ -19,7 +20,7 @@ const Dashboard = () => {
 
     const { id, email,token } = useSelector((state) => state.user);
     const [accounts, setAccounts] = useState([]);
-    console.log(id,email,token)
+
 
 
     const handleCreateAccount = async (e) => {
@@ -66,20 +67,29 @@ const Dashboard = () => {
 
 
 
-    const api = axios.create({
-        baseURL: `http://localhost:8080`,
-        headers: {
-            'Authorization': `Bearer ${token}`, // Ensure the token is a valid string
-            "Content-Type": "application/json",
-        },
-    });
+
+
+    // const fetchUserLoans = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:8080/api/accounts/accountBySer/'+id);
+    //         const data = await response.json();
+    //         setLoans(data); // Set the fetched data to state
+    //     } catch (error) {
+    //         console.error('Error fetching loans:', error);
+    //         setError('Failed to fetch loan details');
+    //     }
+    // };
+
 
     // Fetch accounts on component mount
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/accounts/accountBySer/${id}`);
-                setAccounts(response.data);
+                const response = await fetch('http://localhost:8080/api/accounts/accountBySer/1');
+
+                const data = await response.json();
+                console.log(data)
+                setAccounts(data);
             } catch (error) {
                 console.error('Error fetching accounts:', error);
             }
@@ -89,6 +99,37 @@ const Dashboard = () => {
             fetchAccounts();
         }
     }, [id],handleCreateAccount);
+
+
+//     const fetchTasks = async () => {
+//
+// // Fetch tasks from the server
+//
+//         try {
+//             const response = await fetch(`http://localhost:8080/api/accounts/accountBySer/${id}`, {
+//
+//                 method:'GET',
+//                 headers: {
+//                     'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwidXNlck5hbWUiOiJqb2huX2RvZSIsInJvbGUiOlsiQURNSU4iXSwiZXhwIjoxNzMwMzYwNDk5fQ.JGl0sALsuKKqDTJ9UHhBovkXJXktXKlVqS4UdjMiEBw`, // Use 'Bearer' followed by a space and your token
+//                     'Content-Type': 'application/json' // Optional, set based on your API needs
+//                 }
+//                 // Since you are not sending any body, you can skip the 'body' field
+//             });
+//
+//             if (!response.ok) throw new Error('Failed to fetch tasks: ' + response.statusText);
+//
+//
+//
+//             setAccounts(response.data);
+//         } catch (err) {
+//             setMessage(`Request failed: ${error.message}`);
+//             setMessageColor('text-red-600');
+//         }
+//     };
+//
+//     useEffect(() => {
+//         fetchTasks(); // Fetch tasks when component mounts
+//     }, []);
 
 
 

@@ -14,7 +14,9 @@ const Loan = () => {
     const fetchUserLoans = async () => {
         try {
             const response = await fetch('http://localhost:8080/api/accounts/byUser/'+id);
+
             const data = await response.json();
+            console.log(data)
             setLoans(data); // Set the fetched data to state
         } catch (error) {
             console.error('Error fetching loans:', error);

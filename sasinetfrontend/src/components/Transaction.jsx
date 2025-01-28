@@ -9,26 +9,9 @@ const Transaction = () => {
     const [message, setMessage] = useState("");
     const [accountIds, setAccountIds] = useState([]);
     const [selectedAccountId, setSelectedAccountId] = useState(null); // To store selected accountId
+    const [transactions, setTransactions] = useState([]);
     const location = useLocation();
     const { id, email } = useSelector((state) => state.user);
-    useEffect(() => {
-        // Fetch account IDs when the component mounts
-        const fetchAccountIds = async () => {
-            try {
-                const response = await fetch('http://localhost:8080/api/savingaccount/savings/accountIds?userId='+id);
-                const data = await response.json();
-                console.log("this are trans ",data)
-                setAccountIds(data); // Populate the account IDs in state
-                setSelectedAccountId(data[0]); // Set the first account ID as default
-            } catch (error) {
-                console.error("Error fetching account IDs:", error);
-                setMessage("Failed to load account IDs.");
-            }
-        };
-
-        fetchAccountIds();
-    }, []); // Empty dependency array ensures this runs only once on mount
-
     const handleAmountChange = (event) => {
         setAmount(event.target.value);
     };
@@ -40,7 +23,6 @@ const Transaction = () => {
     const handleAccountChange = (event) => {
         setSelectedAccountId(event.target.value);
     };
-
     const handleTransaction = async () => {
         if (!amount || isNaN(amount) || amount <= 0) {
             setMessage("Please enter a valid amount.");
@@ -76,6 +58,41 @@ const Transaction = () => {
             console.error("Transaction error:", error);
         }
     };
+    useEffect(() => {
+        // Fetch account IDs when the component mounts
+        const fetchAccountIds = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/savingaccount/savings/accountIds?userId='+id);
+                const data = await response.json();
+                console.log("this are trans ",data)
+                setAccountIds(data); // Populate the account IDs in state
+                setSelectedAccountId(data[0]); // Set the first account ID as default
+            } catch (error) {
+                console.error("Error fetching account IDs:", error);
+                setMessage("Failed to load account IDs.");
+            }
+        };
+
+        const fetchTransactionData = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/transactions/trasaction/user?userID='+id);
+                const data = await response.json();
+                console.log("Fetched transaction data:", data);
+                setTransactions(data);
+                // You can also update the state or perform further operations with the data here.
+            } catch (error) {
+                console.error("Error fetching transaction data:", error);
+                // Optionally, handle the error by updating the UI or state.
+            }
+        };
+
+        fetchTransactionData();
+        fetchAccountIds();
+    }, []); // Empty dependency array ensures this runs only once on mount
+
+
+
+
 
     return (
         <div>
@@ -133,6 +150,44 @@ const Transaction = () => {
                 </button>
 
                 {message && <p className="mt-4 text-lg font-semibold">{message}</p>}
+            </div>
+            <div className="p-6">
+                <h2 className="text-2xl font-bold mb-4">Transaction Table</h2>
+                <table className="table-auto w-full border-collapse border border-gray-300">
+                    <thead>
+                    <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-4 py-2">ID</th>
+                        <th className="border border-gray-300 px-4 py-2">Account ID</th>
+                        <th className="border border-gray-300 px-4 py-2">Amount</th>
+                        <th className="border border-gray-300 px-4 py-2">Type</th>
+                        <th className="border border-gray-300 px-4 py-2">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {transactions.map((transaction, index) => (
+                        <tr
+                            key={transaction.id}
+                            className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                        >
+                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                {transaction.id}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                {transaction.accountId}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                {transaction.amount}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                {transaction.type}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                {new Date(transaction.date).toLocaleString()}
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

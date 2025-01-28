@@ -83,22 +83,34 @@ const Dashboard = () => {
 
     // Fetch accounts on component mount
     useEffect(() => {
+        console.log("Id is ", id, token);
         const fetchAccounts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/accounts/accountBySer/1');
+                const response = await fetch('http://localhost:8080/api/accounts/accountBySer/' + id, {
+                    method: 'GET', // Default for fetch, but good to include
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Include the token here
+                        'Content-Type': 'application/json', // Optional, depending on your API
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const data = await response.json();
-                console.log(data)
+                console.log(data);
                 setAccounts(data);
             } catch (error) {
                 console.error('Error fetching accounts:', error);
             }
         };
 
-        if (id) {
+        if (id && token) { // Ensure both `id` and `token` are available before fetching
             fetchAccounts();
         }
-    }, [id],handleCreateAccount);
+    }, [id, token]); // Dependency array includes `token`
+
 
 
 //     const fetchTasks = async () => {
